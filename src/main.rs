@@ -12,10 +12,10 @@ use terminal_size::Width;
 
 /// Fill out placeholders in templates
 ///
-/// Reads a data-file and a set of template-files and writes a set of output-files corresponding to
+/// Reads a data file and a set of template-files and writes a set of output-files corresponding to
 /// the templates files.
 ///
-/// Placeholders in the template-files are replaced with values from the data-file in the
+/// Placeholders in the template-files are replaced with values from the data file in the
 /// output-files.
 /// Each placeholder is marked up in the template-files by its name in double braces.
 /// E.g. {{ recipient }}.
@@ -23,7 +23,7 @@ use terminal_size::Width;
 /// A single placeholder name may optionally recur multiple times in multiple in multiple template-files.
 /// If so, they are replaced with the same value each time.
 ///
-/// The data-file is a headerless CSV file.
+/// The data file is a headerless CSV file, read from STDIN.
 /// Each record must have two fields - a placeholder-name and a value.
 /// The delimiter is an ASCII comma.
 /// Leading and trailing whitespace are trimmed from both placeholder-names and values.
@@ -31,20 +31,8 @@ use terminal_size::Width;
 /// Fields may be quoted with ASCII double quote characters.
 /// If you need to use an ASCII double quote you can escape it by doubling it.
 /// If a record starts with a hash character, this line is ignored.
-///
 #[derive(Debug, StructOpt)]
 struct Opt {
-    /// A CSV file with two columns: placeholder-name and value.
-    /// If DATA-FILE set to "-" the CSV file is read from STDIN.
-    #[structopt(
-        short,
-        long,
-        parse(from_os_str),
-        name = "DATA-FILE",
-        default_value = "-"
-    )]
-    data_file: PathBuf,
-
     /// A template-file - must have the .tmpl file extension.
     #[structopt(parse(from_os_str), name = "TEMPLATE-FILE")]
     template_files: Vec<PathBuf>,
@@ -57,13 +45,11 @@ struct Opt {
 
 fn main() -> Result<()> {
     use std::collections::HashSet;
-    use std::fs::read;
     use std::fs::read_to_string;
     use std::fs::OpenOptions;
     use std::io;
     use std::io::Read;
     use std::io::Write;
-    use std::path::Path;
     use std::process::exit;
 
     let width = if let Some((Width(w), _)) = terminal_size() {
@@ -124,18 +110,12 @@ fn main() -> Result<()> {
         .map(|s| s.to_string())
         .collect();
 
-    let input = if opt.data_file == Path::new("-") {
-        let mut buffer = Vec::new();
-        io::stdin()
-            .read_to_end(&mut buffer)
-            .context("Failed to read data-file from stdin")?;
-        buffer
-    } else {
-        read(&opt.data_file)
-            .with_context(|| format!("Failed to read data file {:?}", opt.data_file))?
-    };
-    let input_vars = data::parse(&input)
-        .with_context(|| format!("Failed to validate data file {:?}", opt.data_file))?;
+    let mut input = Vec::new();
+    io::stdin()
+        .read_to_end(&mut input)
+        .context("Failed to read data file from stdin")?;
+    let input = input;
+    let input_vars = data::parse(&input).context("Failed to validate data file")?;
 
     let extra = input_vars
         .keys()
@@ -154,12 +134,11 @@ fn main() -> Result<()> {
         .collect();
     if !missing.is_empty() {
         return Err(anyhow!(
-            "Placeholders used in templates are not defined in data-file: {:?}",
+            "Placeholders used in templates are not defined in data file: {:?}",
             missing
         )
         .context(format!(
-            "Failed to validate data file {:?} against template-files {:?}",
-            opt.data_file,
+            "Failed to validate data file against template-files {:?}",
             templates.iter().map(|(path, _)| path).collect::<Vec<_>>(),
         )));
     }

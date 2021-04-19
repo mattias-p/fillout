@@ -7,7 +7,6 @@ description = "A CLI tool to fill out placeholders in templates"
 readme = "README.md"
 repository = "https://github.com/mattias-p/fillout"
 license = "Apache-2.0"
-license-file = "LICENSE"
 keywords = ["cli", "template", "generator", "static", "file"]
 categories = ["command-line-utilities", "template-engine"]
 

@@ -21,7 +21,7 @@ files or questionaires.
   If one of your templates contains a placeholder that isn't present in the
   data you provide, this is reported as an error and no files are written.
 * **Integration**.
-  The data file can be read from STDIN is to streamline generating files
+  The data file is read from STDIN to streamline generating files
   from dynamically generated data.
 
 
