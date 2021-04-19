@@ -153,7 +153,7 @@ fn main() -> Result<()> {
         .cloned()
         .collect();
     if !missing.is_empty() {
-        Err(anyhow!(
+        return Err(anyhow!(
             "Placeholders used in templates are not defined in data-file: {:?}",
             missing
         )
@@ -161,7 +161,7 @@ fn main() -> Result<()> {
             "Failed to validate data file {:?} against template-files {:?}",
             opt.data_file,
             templates.iter().map(|(path, _)| path).collect::<Vec<_>>(),
-        )))?;
+        )));
     }
 
     let outputs: Vec<_> = outputs
