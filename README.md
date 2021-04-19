@@ -1,4 +1,7 @@
-# Fillout
+Fillout
+=======
+[![Crates.io]][Crates.io badge]
+[![Changelog]][Changelog badge]
 
 `Fillout` generates files by filling out placeholders in templates.
 
@@ -39,7 +42,53 @@ $ cargo install fillout
 
 ## Usage
 
-To begin with, let's take a look at the tool's own usage documentation:
+For the purpose of this demonstration, create some example data:
+
+```
+$ mkdir templates
+$ echo 'Lorem {{alpha}} {{beta}} sit.' > templates/first.txt.tmpl
+$ echo 'Duis {{gamma}} irure {{beta}}.' > templates/second.txt.tmpl
+$ echo 'alpha, ipsum' > input.data
+$ echo 'beta, dolor' >> input.data
+$ echo 'gamma, aute' >> input.data
+```
+
+Generate a set of files into the output directory:
+
+```
+$ mkdir output
+$ fillout -o output templates/* < input.data
+$ ls -l output/
+total 8K
+-rw------- 1 mattias mattias 23 apr 18 12:35 first.txt
+-rw------- 1 mattias mattias 23 apr 18 12:35 second.txt
+$ cat output/first.txt
+Lorem ipsum dolor sit.
+$ cat output/second.txt
+Duis aute irure dolor.
+```
+
+Now let's try out how the validation works.
+Add another template with a misspelled placeholder and attempt to generate a new
+set of files:
+
+```
+$ echo 'Dolor magna eget est lorem {{ahpla}}.' > templates/third.txt.tmpl
+$ fillout -o output templates/* < input.data
+Error: Failed to validate data file "-" against template-files ["/tmp/templates/first.txt.tmpl", "/tmp/templates/second.txt.tmpl", "/tmp/templates/third.txt.tmpl"]
+
+Caused by:
+    Placeholders used in templates are not defined in data-file: ["ahpla"]
+$ ls -l output/
+total 8K
+-rw------- 1 mattias mattias 23 apr 18 12:35 first.txt
+-rw------- 1 mattias mattias 23 apr 18 12:35 second.txt
+```
+
+Note that now new files have been created and that the exising files that
+already existed are unchanged (as indicated by their timestamps and file sizes).
+
+Finally, let's take a look at `fillout`'s own usage documentation:
 
 ```
 $ fillout --help
@@ -91,52 +140,6 @@ ARGS:
 
 ```
 
-For the purpose of this demonstration, create some example data:
-
-```
-$ mkdir templates
-$ echo Lorem {{alpha}} {{beta}} sit. > templates/first.txt.tmpl
-$ echo Duis {{gamma}} irure {{beta}}. > templates/second.txt.tmpl
-$ echo alpha, ipsum > input.data
-$ echo beta, dolor >> input.data
-$ echo gamma, aute >> input.data
-```
-
-Generate a set of files into the output directory:
-
-```
-$ mkdir output
-$ fillout -o output templates/* < input.data
-$ ls -l output/
-total 8K
--rw------- 1 mattias mattias 23 apr 18 12:35 first.txt
--rw------- 1 mattias mattias 23 apr 18 12:35 second.txt
-$ cat output/first.txt
-Lorem ipsum dolor sit.
-$ cat output/second.txt
-Duis aute irure dolor.
-```
-
-Now let's try out how the validation works.
-Add another template with a misspelled placeholder and attempt to generate a new
-set of files:
-
-```
-$ echo Dolor magna eget est lorem {{ahpla}}. > templates/third.txt.tmpl
-$ fillout -o output templates/* < input.data
-Error: Failed to validate data file "-" against template-files ["/tmp/templates/first.txt.tmpl", "/tmp/templates/second.txt.tmpl", "/tmp/templates/third.txt.tmpl"]
-
-Caused by:
-    Placeholders used in templates are not defined in data-file: ["ahpla"]
-$ ls -l output/
-total 8K
--rw------- 1 mattias mattias 23 apr 18 12:35 first.txt
--rw------- 1 mattias mattias 23 apr 18 12:35 second.txt
-```
-
-Note that now new files have been created and that the exising files that
-already existed are unchanged (as indicated by their timestamps and file sizes).
-
 
 ## Contact
 
@@ -144,22 +147,12 @@ To ask questions, report bugs or suggest features, please use the [issue
 tracker].
 
 
-## License
-
-Licensed under the [Apache License, Version 2.0 (the "License")][License]; you
-may not use any of the files in this distribution except in compliance with the
-License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed
-under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-CONDITIONS OF ANY KIND, either express or implied. See the License for the
-specific language governing permissions and limitations under the License.
 
 
-
-
+[Changelog badge]: https://github.com/mattias-p/fillout/blob/main/CHANGELOG.md
+[Changelog]: https://raw.githubusercontent.com/mattias-p/fillout/main/img/changelog.svg?sanitize=true
+[Crates.io badge]: https://crates.io/crates/fillout
+[Crates.io]: https://img.shields.io/crates/v/fillout.svg
 [Install stable Rust and Cargo]: https://www.rust-lang.org/tools/install
 [Issue tracker]: https://github.com/mattias-p/fillout/issues
 [License]: LICENSE

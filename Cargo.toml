@@ -12,7 +12,7 @@ keywords = ["cli", "template", "generator", "static", "file"]
 categories = ["command-line-utilities", "template-engine"]
 
 [badges]
-maintenance = { status = "passively-maintained" }
+maintenance = { status = "actively-maintained" }
 
 [profile.release]
 opt-level = "s"
