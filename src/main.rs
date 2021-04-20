@@ -55,7 +55,7 @@ fn main() -> Result<()> {
     let width = if let Some((Width(w), _)) = terminal_size() {
         w as usize
     } else {
-        120
+        60
     };
 
     let opt = Opt::from_clap(&Opt::clap().set_term_width(width).get_matches());
