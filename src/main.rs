@@ -126,7 +126,6 @@ fn main() -> Result<()> {
             name
         );
     }
-    println!("{:?}", &template_vars);
     let missing: Vec<_> = template_vars
         .iter()
         .filter(|name| !input_vars.contains_key(*name))
