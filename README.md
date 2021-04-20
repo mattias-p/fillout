@@ -42,7 +42,7 @@ $ cargo install fillout
 
 ## Usage
 
-For the purpose of this demonstration, create some example data:
+For the purpose of this demonstration, let's create some example data:
 
 ```
 $ mkdir templates
