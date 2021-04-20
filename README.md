@@ -75,7 +75,7 @@ set of files:
 ```
 $ echo 'Dolor magna eget est lorem {{ahpla}}.' > templates/third.txt.tmpl
 $ fillout -o output templates/* < input.data
-Error: Failed to validate data file "-" against template-files ["/tmp/templates/first.txt.tmpl", "/tmp/templates/second.txt.tmpl", "/tmp/templates/third.txt.tmpl"]
+Error: Failed to validate data file against template-files ["/tmp/templates/first.txt.tmpl", "/tmp/templates/second.txt.tmpl", "/tmp/templates/third.txt.tmpl"]
 
 Caused by:
     Placeholders used in templates are not defined in data-file: ["ahpla"]
@@ -92,52 +92,51 @@ Finally, let's take a look at `fillout`'s own usage documentation:
 
 ```
 $ fillout --help
-fillout 0.1.0
+fillout 0.1.1
 Fill out placeholders in templates
 
-Reads a data-file and a set of template-files and writes a set of output-
-files corresponding to the templates files.
+Reads a data file and a set of template-files and writes a
+set of output-files corresponding to the templates files.
 
-Placeholders in the template-files are replaced with values from the data-
-file in the output-files. Each placeholder is marked up in the
-template-files by its name in double braces. E.g. {{ recipient }}.
-Whitespace surrounding the name is optional. A single placeholder name may
-optionally recur multiple times in multiple in multiple template-files. If
-so, they are replaced with the same value each time.
+Placeholders in the template-files are replaced with values
+from the data file in the output-files. Each placeholder is
+marked up in the template-files by its name in double
+braces. E.g. {{ recipient }}. Whitespace surrounding the
+name is optional. A single placeholder name may optionally
+recur multiple times in multiple in multiple template-files.
+If so, they are replaced with the same value each time.
 
-The data-file is a headerless CSV file. Each record must have two fields - a
-placeholder-name and a value. The delimiter is an ASCII comma. Leading and
-trailing whitespace are trimmed from both placeholder-names and values.
-Records are terminated with CR, LF or CRLF. Fields may be quoted with ASCII
-double quote characters. If you need to use an ASCII double quote you can
-escape it by doubling it. If a record starts with a hash character, this
+The data file is a headerless CSV file, read from STDIN.
+Each record must have two fields - a placeholder-name and a
+value. The delimiter is an ASCII comma. Leading and trailing
+whitespace are trimmed from both placeholder-names and
+values. Records are terminated with CR, LF or CRLF. Fields
+may be quoted with ASCII double quote characters. If you
+need to use an ASCII double quote you can escape it by
+doubling it. If a record starts with a hash character, this
 line is ignored.
 
 USAGE:
     fillout [OPTIONS] [TEMPLATE-FILE]...
 
 FLAGS:
-    -h, --help
+    -h, --help       
             Prints help information
 
-    -V, --version
+    -V, --version    
             Prints version information
 
 
 OPTIONS:
-    -d, --data-file <DATA-FILE>
-            A CSV file with two columns: placeholder-name and value. If
-            DATA-FILE set to "-" the CSV file is read from STDIN [default:
-            -]
     -o, --output-dir <DIR>
-            The directory where output-files are written - if none is given
-            each output-file is written to the directory of its
-            corresponding template-file
+            The directory where output-files are written -
+            if none is given each output-file is written to
+            the directory of its corresponding template-file
 
 ARGS:
     <TEMPLATE-FILE>...
-            A template-file - must have the .tmpl file extension
-
+            A template-file - must have the .tmpl file
+            extension
 ```
 
 
