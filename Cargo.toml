@@ -10,9 +10,6 @@ license = "Apache-2.0"
 keywords = ["cli", "template", "generator", "static", "file"]
 categories = ["command-line-utilities", "template-engine"]
 
-[badges]
-maintenance = { status = "actively-maintained" }
-
 [profile.release]
 opt-level = "s"
 lto = true
