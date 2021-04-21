@@ -68,7 +68,7 @@ $ cat output/second.txt
 Duis aute irure dolor.
 ```
 
-Now let's try out how the validation works.
+Now let's try the validation.
 Add another template with a misspelled placeholder and attempt to generate a new
 set of files:
 
@@ -85,8 +85,8 @@ total 8K
 -rw------- 1 mattias mattias 23 apr 18 12:35 second.txt
 ```
 
-Note that now new files have been created and that the exising files that
-already existed are unchanged (as indicated by their timestamps and file sizes).
+Note that no new files were created and that the files that already existed are
+unchanged (as indicated by their timestamps and file sizes).
 
 Finally, let's take a look at `fillout`'s own usage documentation:
 
